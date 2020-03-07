@@ -2,7 +2,7 @@
   <div class="product-item">
     <div class="store p-1 border-bottom-1 bg-grey">
       <i class="fa fa-building"></i>
-      {{ details.store.name }}
+      {{ details.store }}
     </div>
     <div class="d-flex">
       <div class="col-md-8 col-md-auto pl-0">
@@ -13,7 +13,7 @@
       </div>
       <div class="col-md-4 col-md-auto pr-0">
         <div class="product-image float-right">
-          <img class="rounded img-thumbnail" :src="details.stuff.image_url" />
+          <img class="rounded img-thumbnail" :src="details.image_url" />
         </div>
       </div>
     </div>
@@ -24,9 +24,9 @@
             <button
               type="button"
               class="btn btn-default btn-number"
-              :disabled="stock === 1"
+              :disabled="details.quantity === 1"
               data-type="minus"
-              v-on:click="kurang()"
+              v-on:click="details.quantity--"
             >
               <span class="fa fa-minus"></span>
             </button>
@@ -34,9 +34,9 @@
           <input
             type="text"
             step="1"
-            max="stock == details.stuff.stock"
+            max="details.quantity == details.stock"
             min="1"
-            v-model="stock"
+            v-model="details.quantity"
             title="Qty"
             class="form-control text-center"
             size="2"
@@ -46,8 +46,8 @@
               type="button"
               class="btn btn-default btn-number"
               data-type="plus"
-              :disabled="stock === details.stuff.stock"
-              v-on:click="tambah(details.price, stock)"
+              :disabled="details.quantity === details.stock"
+              v-on:click="details.quantity++"
             >
               <span class="fa fa-plus"></span>
             </button>
@@ -64,40 +64,22 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  name: 'Item',
-  props: ['details'],
+  name: "item",
+  props: ["details"],
+  mounted() {
+    console.log(this.$props.details);
+  },
   filters: {
     toIDR(value) {
-      return 'Rp ' + value.toLocaleString() + '';
+      return "Rp " + value.toLocaleString() + "";
     }
   },
   data() {
-    return {
-      cart: [],
-      stock: 1
-    };
+    return {};
   },
-  methods: {
-    tambah(x, y) {
-      this.stock++;
-      console.log(x, y);
-      this.addToCart(x, y);
-    },
-    kurang() {
-      this.stock--;
-      this.removeFromCart();
-    },
-    addToCart(price, count) {
-      let currentItem = price * count + 1;
-      this.cart.push(currentItem);
-      console.log(this.cart);
-    },
-    removeFromCart() {
-      this.cart.pop();
-      console.log(this.cart);
-    }
-  }
+  methods: mapActions(["tambah", "kurang"])
 };
 </script>
 

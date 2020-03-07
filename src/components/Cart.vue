@@ -3,11 +3,7 @@
     <div class="container">
       <Header />
       <div class="main">
-        <div
-          class="card mb-1 ml-1 mr-1"
-          v-for="item in items"
-          v-bind:key="item.id"
-        >
+        <div class="card mb-1 ml-1 mr-1" v-for="item in products" v-bind:key="item.id">
           <div class="card-body">
             <Item v-bind:details="item" />
           </div>
@@ -31,25 +27,28 @@
 </template>
 
 <script>
-import Header from './Header.vue';
-import Item from './Item.vue';
+import Header from "./Header.vue";
+import Item from "./Item.vue";
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Cart',
+  name: "Cart",
   components: {
     Header,
     Item
   },
-  props: ['items'],
-  methods: {
-    created() {
-      this.$props.items.reduce((a, b) => a + b, 0);
+  computed: {
+    ...mapGetters({
+      products: "cartProducts"
+    }),
+    total() {
+      return this.products.reduce((total, p) => {
+        return total + p.price * p.quantity;
+      }, 0);
     }
   },
   data() {
-    return {
-      total: 0
-    };
+    return {};
   }
 };
 </script>

@@ -1,22 +1,14 @@
 <template>
   <div id="app">
-    <Cart v-bind:items="dataProduct.items" />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Cart from './components/Cart';
-import product from './assets/data.json';
-
 export default {
   name: 'App',
-  components: {
-    Cart
-  },
   data() {
-    return {
-      dataProduct: product
-    };
+    return {};
   }
 };
 </script>
